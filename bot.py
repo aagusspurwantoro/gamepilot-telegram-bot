@@ -2,9 +2,11 @@ import asyncio
 import os
 
 from aiogram import Bot, Dispatcher
-from aiogram.filters import CommandStart
+from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from dotenv import load_dotenv
+
+from calculator import CalculatorError, calculate
 
 load_dotenv()
 
@@ -12,10 +14,42 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 dp = Dispatcher()
 
+HELP_TEXT = (
+    "Send me any math expression and I'll calculate it.\n\n"
+    "Operators: + - * / // % ** or ^ and parentheses\n"
+    "Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n"
+    "Constants: pi, e\n\n"
+    "Examples:\n"
+    "  2+2*5\n"
+    "  (10-4)/3\n"
+    "  sqrt(16) + 3^2\n"
+    "  2*pi*5"
+)
+
 
 @dp.message(CommandStart())
 async def handle_start(message: Message) -> None:
-    await message.answer("Hello! GamePilot bot is alive. 🎮")
+    await message.answer(
+        "Hello! I'm GamePilot calculator bot. 🎮🧮\n\n" + HELP_TEXT
+    )
+
+
+@dp.message(Command("help"))
+async def handle_help(message: Message) -> None:
+    await message.answer(HELP_TEXT)
+
+
+@dp.message()
+async def handle_expression(message: Message) -> None:
+    if not message.text:
+        await message.answer("Please send a text math expression.")
+        return
+    try:
+        result = calculate(message.text)
+    except CalculatorError as exc:
+        await message.answer(f"⚠️ {exc}\n\nSend /help to see what I understand.")
+        return
+    await message.answer(result)
 
 
 async def main() -> None:
