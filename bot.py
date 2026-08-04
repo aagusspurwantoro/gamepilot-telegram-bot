@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 
 from aiogram import Bot, Dispatcher
@@ -49,6 +50,25 @@ async def handle_bdotax(message: Message, command: CommandObject) -> None:
         await message.answer(f"⚠️ {exc}")
         return
     await message.answer(reply)
+
+
+@dp.message(Command("templates"))
+async def handle_templates(message: Message, command: CommandObject) -> None:
+    name = (command.args or "").strip().lower()
+    if not name:
+        await message.answer(
+            "📋 Available templates:\n"
+            "  /templates login\n\n"
+            "Tap one, then copy the text and fill in the [placeholders]."
+        )
+        return
+    if name != "login":
+        await message.answer(f"⚠️ no template called '{name}' — available: login")
+        return
+    with open("templates.json", encoding="utf-8") as f:
+        text = json.load(f)["login"]
+    # code block = one-tap copy in Telegram
+    await message.answer(f"```\n{text}\n```", parse_mode="Markdown")
 
 
 @dp.message()
