@@ -59,6 +59,26 @@ async def handle_schedule(message: Message) -> None:
     await message.answer(f"📅 Pilot schedule:\n{SCHEDULE_URL}")
 
 
+@dp.message(Command("combo"))
+async def handle_combo(message: Message, command: CommandObject) -> None:
+    with open("combos.json", encoding="utf-8") as f:
+        combos = json.load(f)
+    name = (command.args or "").strip().lower()
+    if not name:
+        await message.answer(
+            "⚔️ Available combos:\n"
+            + "\n".join(f"  /combo {n}" for n in sorted(combos))
+        )
+        return
+    if name not in combos:
+        await message.answer(
+            f"⚠️ no combo called '{name}' — available: {', '.join(sorted(combos))}"
+        )
+        return
+    # code block = one-tap copy in Telegram
+    await message.answer(f"```\n{combos[name]}\n```", parse_mode="Markdown")
+
+
 @dp.message(Command("templates"))
 async def handle_templates(message: Message, command: CommandObject) -> None:
     name = (command.args or "").strip().lower()
