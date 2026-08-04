@@ -2,10 +2,12 @@ import asyncio
 import os
 
 from aiogram import Bot, Dispatcher
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command, CommandObject, CommandStart
 from aiogram.types import Message
 from dotenv import load_dotenv
 
+from bdotax import BdoTaxError
+from bdotax import run as bdotax_run
 from calculator import CalculatorError, calculate
 
 load_dotenv()
@@ -40,12 +42,13 @@ async def handle_help(message: Message) -> None:
 
 
 @dp.message(Command("bdotax"))
-async def handle_bdotax(message: Message) -> None:
-    await message.answer(
-        "🏴‍☠️ BDO Market Tax Calculator — coming soon!\n\n"
-        "This will calculate Black Desert Online marketplace tax "
-        "(65% without Value Pack, 84.5% with Value Pack), garmoth-style."
-    )
+async def handle_bdotax(message: Message, command: CommandObject) -> None:
+    try:
+        reply = bdotax_run(command.args or "")
+    except BdoTaxError as exc:
+        await message.answer(f"⚠️ {exc}")
+        return
+    await message.answer(reply)
 
 
 @dp.message()
