@@ -15,6 +15,8 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+SCHEDULE_URL = "https://docs.google.com/spreadsheets/d/1m4p1gzCgbTrQUMn81e2YGEZ3s23WesE5s8fZaH1ViKY"
+
 dp = Dispatcher()
 
 HELP_TEXT = (
@@ -50,6 +52,11 @@ async def handle_bdotax(message: Message, command: CommandObject) -> None:
         await message.answer(f"⚠️ {exc}")
         return
     await message.answer(reply)
+
+
+@dp.message(Command("schedule"))
+async def handle_schedule(message: Message) -> None:
+    await message.answer(f"📅 Pilot schedule:\n{SCHEDULE_URL}")
 
 
 @dp.message(Command("templates"))
