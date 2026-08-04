@@ -30,7 +30,8 @@ HELP_TEXT = (
     "⚔️ /combo — class combos (witch)\n"
     "📅 /schedule — pilot schedule link\n"
     "🔧 /type-job — job type list (LAIN2, IT, MT, TR)\n"
-    "ℹ️ /info — unit status (Used / Kosong)"
+    "ℹ️ /info — unit status (Used / Kosong)\n"
+    "🕐 /idle — no-order PC number (1410 + PC)"
 )
 
 
@@ -67,6 +68,11 @@ async def handle_type_job(message: Message) -> None:
 @dp.message(Command("info"))
 async def handle_info(message: Message) -> None:
     await message.answer(_load_json("info.json")["info"])
+
+
+@dp.message(Command("idle"))
+async def handle_idle(message: Message) -> None:
+    await message.answer(_load_json("info.json")["idle"])
 
 
 @dp.message(Command("schedule"))
