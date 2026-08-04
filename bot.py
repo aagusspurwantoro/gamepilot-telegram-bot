@@ -54,6 +54,21 @@ async def handle_bdotax(message: Message, command: CommandObject) -> None:
     await message.answer(reply)
 
 
+def _load_json(filename: str) -> dict:
+    with open(filename, encoding="utf-8") as f:
+        return json.load(f)
+
+
+@dp.message(Command("type-job", "typejob", "type_job"))
+async def handle_type_job(message: Message) -> None:
+    await message.answer(_load_json("info.json")["type-job"])
+
+
+@dp.message(Command("info"))
+async def handle_info(message: Message) -> None:
+    await message.answer(_load_json("info.json")["info"])
+
+
 @dp.message(Command("schedule"))
 async def handle_schedule(message: Message) -> None:
     await message.answer(f"📅 Pilot schedule:\n{SCHEDULE_URL}")
@@ -61,8 +76,7 @@ async def handle_schedule(message: Message) -> None:
 
 @dp.message(Command("combo"))
 async def handle_combo(message: Message, command: CommandObject) -> None:
-    with open("combos.json", encoding="utf-8") as f:
-        combos = json.load(f)
+    combos = _load_json("combos.json")
     name = (command.args or "").strip().lower()
     if not name:
         await message.answer(
@@ -92,8 +106,7 @@ async def handle_templates(message: Message, command: CommandObject) -> None:
     if name != "login":
         await message.answer(f"⚠️ no template called '{name}' — available: login")
         return
-    with open("templates.json", encoding="utf-8") as f:
-        text = json.load(f)["login"]
+    text = _load_json("templates.json")["login"]
     # code block = one-tap copy in Telegram
     await message.answer(f"```\n{text}\n```", parse_mode="Markdown")
 
