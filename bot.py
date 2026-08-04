@@ -95,20 +95,22 @@ async def handle_combo(message: Message, command: CommandObject) -> None:
 
 @dp.message(Command("templates"))
 async def handle_templates(message: Message, command: CommandObject) -> None:
+    templates = _load_json("templates.json")
     name = (command.args or "").strip().lower()
     if not name:
         await message.answer(
             "📋 Available templates:\n"
-            "  /templates login\n\n"
-            "Tap one, then copy the text and fill in the [placeholders]."
+            + "\n".join(f"  /templates {n}" for n in sorted(templates))
+            + "\n\nTap one, then copy the text and fill in the [placeholders]."
         )
         return
-    if name != "login":
-        await message.answer(f"⚠️ no template called '{name}' — available: login")
+    if name not in templates:
+        await message.answer(
+            f"⚠️ no template called '{name}' — available: {', '.join(sorted(templates))}"
+        )
         return
-    text = _load_json("templates.json")["login"]
     # code block = one-tap copy in Telegram
-    await message.answer(f"```\n{text}\n```", parse_mode="Markdown")
+    await message.answer(f"```\n{templates[name]}\n```", parse_mode="Markdown")
 
 
 @dp.message()
