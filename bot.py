@@ -20,23 +20,23 @@ SCHEDULE_URL = "https://docs.google.com/spreadsheets/d/1m4p1gzCgbTrQUMn81e2YGEZ3
 dp = Dispatcher()
 
 HELP_TEXT = (
-    "Send me any math expression and I'll calculate it.\n\n"
-    "Operators: + - * / // % ** or ^ and parentheses\n"
-    "Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n"
-    "Constants: pi, e\n\n"
-    "Examples:\n"
-    "  2+2*5\n"
-    "  (10-4)/3\n"
-    "  sqrt(16) + 3^2\n"
-    "  2*pi*5"
+    "🎮 GamePilot commands:\n\n"
+    "🧮 Calculator — send any math expression:\n"
+    "  2+2*5 · (10-4)/3 · sqrt(16) + 3^2 · 2*pi*5\n"
+    "  Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n\n"
+    "🏴‍☠️ /bdotax <price> [vp] [ring] [fame1|fame2|fame3]\n"
+    "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
+    "📋 /templates — copy-paste login/logout/progress templates\n"
+    "⚔️ /combo — class combos (witch)\n"
+    "📅 /schedule — pilot schedule link\n"
+    "🔧 /type-job — job type list (LAIN2, IT, MT, TR)\n"
+    "ℹ️ /info — unit status (Used / Kosong)"
 )
 
 
 @dp.message(CommandStart())
 async def handle_start(message: Message) -> None:
-    await message.answer(
-        "Hello! I'm GamePilot calculator bot. 🎮🧮\n\n" + HELP_TEXT
-    )
+    await message.answer("Hello! I'm GamePilot bot. 🎮\n\n" + HELP_TEXT)
 
 
 @dp.message(Command("help"))
