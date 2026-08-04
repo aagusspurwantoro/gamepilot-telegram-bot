@@ -39,6 +39,15 @@ async def handle_help(message: Message) -> None:
     await message.answer(HELP_TEXT)
 
 
+@dp.message(Command("bdotax"))
+async def handle_bdotax(message: Message) -> None:
+    await message.answer(
+        "🏴‍☠️ BDO Market Tax Calculator — coming soon!\n\n"
+        "This will calculate Black Desert Online marketplace tax "
+        "(65% without Value Pack, 84.5% with Value Pack), garmoth-style."
+    )
+
+
 @dp.message()
 async def handle_expression(message: Message) -> None:
     if not message.text:
