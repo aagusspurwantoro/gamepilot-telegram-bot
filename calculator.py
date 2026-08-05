@@ -7,6 +7,9 @@ Supported:
   Operators:  +  -  *  /  //  %  ** (or ^)  parentheses  unary minus
   Functions:  sqrt abs round floor ceil sin cos tan log ln exp pow
   Constants:  pi  e
+
+Commas: outside parentheses a comma is a decimal separator (2,5 -> 2.5);
+inside parentheses it separates function arguments (pow(2,10), round(3.14159, 2)).
 """
 
 import ast
@@ -99,12 +102,33 @@ def _format_result(value: float) -> str:
     return str(value)
 
 
+def _normalize(expression: str) -> str:
+    """Prepare an expression for parsing.
+
+    '^' becomes '**'. A comma outside parentheses is a decimal separator
+    and becomes a dot; a comma inside parentheses is a function-argument
+    separator and is left alone, so pow(2,10) and round(3.14159, 2) work.
+    """
+    expression = expression.strip().replace("^", "**")
+    chars = []
+    depth = 0
+    for ch in expression:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth = max(0, depth - 1)
+        elif ch == "," and depth == 0:
+            ch = "."
+        chars.append(ch)
+    return "".join(chars)
+
+
 def calculate(expression: str) -> str:
     """Evaluate an arithmetic expression, returning the formatted result.
 
     Raises CalculatorError with a user-friendly message on any problem.
     """
-    expression = expression.strip().replace("^", "**").replace(",", ".")
+    expression = _normalize(expression)
     if not expression:
         raise CalculatorError("empty expression")
 

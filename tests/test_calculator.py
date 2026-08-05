@@ -1,0 +1,101 @@
+import pytest
+
+from calculator import CalculatorError, calculate
+
+
+class TestArithmetic:
+    def test_precedence(self):
+        assert calculate("2+2*5") == "12"
+
+    def test_parentheses(self):
+        assert calculate("(10-4)/3") == "2"
+
+    def test_caret_is_power(self):
+        assert calculate("sqrt(16) + 3^2") == "13"
+
+    def test_floor_div_and_mod(self):
+        assert calculate("7//2") == "3"
+        assert calculate("5%3") == "2"
+
+    def test_unary_minus(self):
+        assert calculate("-5 + 2") == "-3"
+
+    def test_constants(self):
+        assert calculate("2*pi*5").startswith("31.4159")
+
+    def test_int_like_floats_format_as_int(self):
+        assert calculate("4/2") == "2"
+
+    def test_non_integer_floats_keep_decimals(self):
+        assert calculate("1/3").startswith("0.333")
+
+
+class TestFunctions:
+    def test_pow_two_arguments(self):
+        # regression: comma-inside-parens was turned into a decimal dot,
+        # making pow(2,10) a one-argument call that crashed
+        assert calculate("pow(2,10)") == "1024"
+
+    def test_round_with_digits(self):
+        assert calculate("round(3.14159, 2)") == "3.14"
+
+    def test_single_arg_functions(self):
+        assert calculate("abs(-3)") == "3"
+        assert calculate("floor(2.7)") == "2"
+        assert calculate("ceil(2.1)") == "3"
+        assert calculate("log(100)") == "2"
+
+
+class TestDecimalComma:
+    def test_comma_outside_parens_is_decimal(self):
+        assert calculate("2,5*4") == "10"
+
+    def test_comma_with_parenthesized_term(self):
+        assert calculate("2,5*(3+2)") == "12.5"
+
+    def test_comma_inside_parens_is_argument_separator(self):
+        # (2,5) parses as a tuple, which is not a number
+        with pytest.raises(CalculatorError):
+            calculate("(2,5)")
+
+
+class TestErrors:
+    def test_empty(self):
+        with pytest.raises(CalculatorError, match="empty"):
+            calculate("")
+
+    def test_division_by_zero(self):
+        with pytest.raises(CalculatorError, match="division by zero"):
+            calculate("1/0")
+
+    def test_exponent_too_large(self):
+        with pytest.raises(CalculatorError, match="exponent"):
+            calculate("9**9**9")
+
+    def test_number_too_large(self):
+        with pytest.raises(CalculatorError, match="too large"):
+            calculate("10**100")
+
+    def test_out_of_domain(self):
+        with pytest.raises(CalculatorError, match="math error"):
+            calculate("sqrt(-1)")
+
+    def test_unknown_function(self):
+        with pytest.raises(CalculatorError, match="unknown function"):
+            calculate("hack(1)")
+
+    def test_names_other_than_constants_rejected(self):
+        with pytest.raises(CalculatorError):
+            calculate("open")
+
+    def test_unsupported_syntax(self):
+        with pytest.raises(CalculatorError):
+            calculate("[1,2,3]")
+
+    def test_no_code_execution(self):
+        with pytest.raises(CalculatorError):
+            calculate("__import__('os').system('id')")
+
+    def test_deep_nesting_handled_gracefully(self):
+        with pytest.raises(CalculatorError):
+            calculate("(" * 500 + "1" + ")" * 500)

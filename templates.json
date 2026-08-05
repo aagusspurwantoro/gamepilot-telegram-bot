@@ -1,5 +1,5 @@
 {
   "login": "Login\nNama: [nama]\nDivisi: [divisi]\nNo Absen: [no absen]\nNo Order: [no order]",
   "logout": "Logout\nNo Login: [no login]\nNo Order: [no order]\nNama: [nama]\nDivisi: [divisi]\nNo Absen: [no absen]\nType Job: [type job]\nUsed",
-  "progress": "Logout\nNo Login: [no login]\nNo Order: [no order]\nNama: [nama]\nDivisi: [divisi]\nNo Absen: [no absen]\nType Job: [type job]\nProgress: [progress]"
+  "progress": "Progress\nNo Login: [no login]\nNo Order: [no order]\nNama: [nama]\nDivisi: [divisi]\nNo Absen: [no absen]\nType Job: [type job]\nProgress: [progress]"
 }

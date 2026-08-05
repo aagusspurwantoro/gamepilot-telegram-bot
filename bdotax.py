@@ -99,19 +99,19 @@ def _fmt(value: float) -> str:
 
 def format_breakdown(result: dict) -> str:
     lines = [
-        f"💰 Sale price: {_fmt(result['price'])}",
-        f"🏛️ Tax (35%): -{_fmt(result['tax'])}",
-        f"📦 Base profit (65%): {_fmt(result['profit'])}",
+        f"Sale price: {_fmt(result['price'])}",
+        f"Tax (35%): -{_fmt(result['tax'])}",
+        f"Base profit (65%): {_fmt(result['profit'])}",
     ]
     if result["vp_bonus"]:
-        lines.append(f"💎 Value Pack (+30%): +{_fmt(result['vp_bonus'])}")
+        lines.append(f"Value Pack (+30%): +{_fmt(result['vp_bonus'])}")
     if result["ring_bonus"]:
-        lines.append(f"💍 Ring/Pass (+5%): +{_fmt(result['ring_bonus'])}")
+        lines.append(f"Ring/Pass (+5%): +{_fmt(result['ring_bonus'])}")
     if result["fame_bonus"]:
-        lines.append(f"👨‍👩‍👧 Family Fame: +{_fmt(result['fame_bonus'])}")
+        lines.append(f"Family Fame: +{_fmt(result['fame_bonus'])}")
     lines += [
         "",
-        f"✅ You receive: {_fmt(result['total'])} ({result['rate']:.2%})",
+        f"You receive: {_fmt(result['total'])} ({result['rate']:.2%})",
     ]
     return "\n".join(lines)
 
@@ -137,7 +137,7 @@ def run(arguments: str) -> str:
         with_vp = breakdown(price, vp=True)
         return (
             format_breakdown(plain)
-            + "\n\n--- with 💎 Value Pack ---\n\n"
+            + "\n\n--- with Value Pack ---\n\n"
             + format_breakdown(with_vp)
         )
 
