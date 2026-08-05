@@ -28,6 +28,7 @@ load_dotenv(BASE_DIR / ".env")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 SCHEDULE_URL = "https://docs.google.com/spreadsheets/d/1m4p1gzCgbTrQUMn81e2YGEZ3s23WesE5s8fZaH1ViKY"
+REPO_URL = "https://github.com/aagusspurwantoro/gamepilot-telegram-bot"
 
 dp = Dispatcher()
 
@@ -65,7 +66,12 @@ BOT_COMMANDS = [
 
 @dp.message(CommandStart())
 async def handle_start(message: Message) -> None:
-    await message.answer("Hello! I'm Game Pilot Bot.\n\n" + HELP_TEXT)
+    await message.answer(
+        "Hello! I'm Game Pilot Bot.\n\n"
+        + HELP_TEXT
+        + "\n\nOpen source — advice, code changes, and suggestions welcome:\n"
+        + REPO_URL
+    )
 
 
 @dp.message(Command("help"))
