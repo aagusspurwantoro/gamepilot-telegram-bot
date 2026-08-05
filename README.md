@@ -11,9 +11,9 @@ A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — calculator,
 | `/templates [name]` | Copy-paste templates (login, logout, progress) with `[placeholders]` |
 | `/combo [class]` | Class combos (witch, witch-macro) |
 | `/schedule` | Pilot schedule link |
-| `/type-job` | Job type list (LAIN2, IT, MT, TR) |
-| `/info` | Unit status reference (Used / Kosong) |
-| `/idle` | No-order PC number rule (1410 + PC number -> 14101-14110) |
+| `/type-job` | Type Job list (LAIN2 pairs: Kosong, Used, IT, MT, TR) |
+| `/info` | Unit status reference (Kosong / Used / IT / MT / TR) |
+| `/idle <pc>` | No-order number for a PC — `/idle 5` -> `14105` (PCs 1-10) |
 | `/help` | Command overview |
 
 ## Setup
@@ -58,6 +58,7 @@ bot.py          — entry point, all command handlers
 calculator.py   — safe AST-based math expression evaluator
 bdotax.py       — BDO central market tax logic
 *.json          — editable content (templates, combos, info)
+pyproject.toml  — project metadata + pytest config
 tests/          — pytest suite for calculator and bdotax
 ```
 

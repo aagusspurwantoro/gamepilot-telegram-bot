@@ -41,7 +41,7 @@ HELP_TEXT = (
     "/schedule — pilot schedule link\n"
     "/type-job — job type list (LAIN2, IT, MT, TR)\n"
     "/info — unit status (Used / Kosong)\n"
-    "/idle — no-order PC number (1410 + PC)"
+    "/idle <pc> — no-order number (e.g. /idle 5 -> 14105)"
 )
 
 # Shown in Telegram's command menu. Names must be a-z/0-9/underscore,
@@ -54,7 +54,7 @@ BOT_COMMANDS = [
     BotCommand(command="schedule", description="Pilot schedule link"),
     BotCommand(command="typejob", description="Job type list (LAIN2, IT, MT, TR)"),
     BotCommand(command="info", description="Unit status (Used / Kosong)"),
-    BotCommand(command="idle", description="No-order PC number rule"),
+    BotCommand(command="idle", description="No-order number for a PC (1-10)"),
 ]
 
 
