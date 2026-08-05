@@ -14,6 +14,8 @@ from bdotax import run as bdotax_run
 from calculator import CalculatorError, calculate
 from hourly import HourlyError
 from hourly import run as hourly_run
+from progress import ProgressError
+from progress import run as progress_run
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -38,7 +40,9 @@ HELP_TEXT = (
     "/bdotax <price> [vp] [ring] [fame1|fame2|fame3|<points>]\n"
     "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
     "/hourly <total> <per-hour>\n"
-    "  hours from trash loot, e.g. /hourly 55k 15k"
+    "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
+    "/progress <current>/<goal> <added>\n"
+    "  silver grinding progress, e.g. /progress 463/500 5.1"
 )
 
 # Shown in Telegram's command menu. Names must be a-z/0-9/underscore.
@@ -46,6 +50,7 @@ BOT_COMMANDS = [
     BotCommand(command="help", description="Command overview"),
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
     BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
+    BotCommand(command="progress", description="Silver grinding progress (e.g. /progress 463/500 5.1)"),
 ]
 
 
@@ -79,6 +84,16 @@ async def handle_hourly(message: Message, command: CommandObject) -> None:
     try:
         reply = hourly_run(command.args or "")
     except HourlyError as exc:
+        await message.answer(f"Error: {exc}")
+        return
+    await message.answer(reply)
+
+
+@dp.message(Command("progress"))
+async def handle_progress(message: Message, command: CommandObject) -> None:
+    try:
+        reply = progress_run(command.args or "")
+    except ProgressError as exc:
         await message.answer(f"Error: {exc}")
         return
     await message.answer(reply)
