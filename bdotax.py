@@ -8,7 +8,8 @@ Mechanics (official PA Wiki + BDFoundry, verified Aug 2026):
   - Family Fame reduction: >=1000 +0.5%, >=4000 +1.0%, >=7000 +1.5%,
     applied to the after-tax profit.
 
-Bonuses stack multiplicatively off the 65% profit, matching the
+Bonuses combine additively off the 65% profit — total rate is
+0.65 * (1 + 0.30 + 0.05 + 0.015) = 88.725% at max — matching the
 community-standard model used by veliainn.com and bdolytics.com.
 """
 
