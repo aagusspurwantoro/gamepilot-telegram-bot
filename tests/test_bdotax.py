@@ -1,6 +1,6 @@
 import pytest
 
-from bdotax import BdoTaxError, breakdown, parse_flags, parse_price, run
+from bdotax import BdoTaxError, breakdown, fame_tier, parse_flags, parse_price, run
 
 
 class TestParsePrice:
@@ -40,13 +40,19 @@ class TestParsePrice:
 
 class TestParseFlags:
     def test_defaults_all_off(self):
-        assert parse_flags([]) == {"vp": False, "ring": False, "fame": 0}
+        assert parse_flags([]) == {
+            "vp": False,
+            "ring": False,
+            "fame": 0,
+            "fame_points": None,
+        }
 
     def test_all_flags(self):
         assert parse_flags(["vp", "ring", "fame3"]) == {
             "vp": True,
             "ring": True,
             "fame": 3,
+            "fame_points": None,
         }
 
     def test_case_insensitive(self):
@@ -58,6 +64,32 @@ class TestParseFlags:
 
     def test_last_fame_flag_wins(self):
         assert parse_flags(["fame1", "fame3"])["fame"] == 3
+
+    def test_raw_fame_points_resolve_to_tier(self):
+        assert parse_flags(["4500"]) == {
+            "vp": False,
+            "ring": False,
+            "fame": 2,
+            "fame_points": 4500,
+        }
+
+
+class TestFameTier:
+    @pytest.mark.parametrize(
+        "points, tier",
+        [
+            (0, 0),
+            (999, 0),
+            (1000, 1),
+            (3999, 1),
+            (4000, 2),
+            (6999, 2),
+            (7000, 3),
+            (15000, 3),
+        ],
+    )
+    def test_boundaries(self, points, tier):
+        assert fame_tier(points) == tier
 
 
 class TestBreakdown:
@@ -95,3 +127,17 @@ class TestRun:
     def test_empty_args_shows_usage(self):
         with pytest.raises(BdoTaxError, match="usage"):
             run("")
+
+    def test_raw_fame_points_in_output(self):
+        reply = run("100m vp 4500")
+        assert "4,500 pts" in reply
+        assert "+1.0%" in reply
+
+    def test_fame_below_1000_gets_no_bonus(self):
+        reply = run("100m 800")
+        assert "800 pts" in reply
+        assert "no bonus" in reply
+
+    def test_fame_preset_still_works(self):
+        reply = run("100m fame3")
+        assert "+1.5%" in reply

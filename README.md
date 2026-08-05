@@ -7,7 +7,7 @@ A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — calculator,
 | Command | Description |
 |---|---|
 | _(any text, private chat)_ | Calculator — evaluates math expressions: `2+2*5`, `(10-4)/3`, `sqrt(16) + 3^2`, `pow(2,10)` |
-| `/bdotax <price> [vp] [ring] [fame1\|fame2\|fame3]` | BDO central market tax breakdown (65% base, 84.5% with Value Pack, +5% ring/pass, family fame tiers). Supports price shortcuts: `500k`, `100m`, `1.5b` |
+| `/bdotax <price> [vp] [ring] [fame1\|fame2\|fame3\|<points>]` | BDO central market tax breakdown (65% base, 84.5% with Value Pack, +5% ring/pass, family fame tiers). Fame accepts presets or raw points (e.g. `4500` -> +1.0%). Supports price shortcuts: `500k`, `100m`, `1.5b` |
 | `/hourly <total> <per-hour>` | Hours from trash loot — `/hourly 55k 15k` -> `3.67 hours (3h 40m)` |
 | `/templates [name]` | Copy-paste templates (login, logout, progress) with `[placeholders]` |
 | `/combo [class]` | Class combos (witch, witch-macro) |

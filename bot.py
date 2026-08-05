@@ -36,7 +36,7 @@ HELP_TEXT = (
     "Calculator — send any math expression:\n"
     "  2+2*5 · (10-4)/3 · sqrt(16) + 3^2 · 2*pi*5\n"
     "  Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n\n"
-    "/bdotax <price> [vp] [ring] [fame1|fame2|fame3]\n"
+    "/bdotax <price> [vp] [ring] [fame1|fame2|fame3|<points>]\n"
     "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
     "/hourly <total> <per-hour>\n"
     "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
