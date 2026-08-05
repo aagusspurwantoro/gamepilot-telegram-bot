@@ -104,9 +104,27 @@ def _evaluate(node: ast.AST) -> float:
     raise CalculatorError("unsupported expression")
 
 
-def _format_result(value: float) -> str:
+def _uses_commas(expression: str) -> bool:
+    """True when the user wrote a comma outside parentheses (thousands
+    separators or a decimal comma). Commas inside parens are function
+    argument separators and do not count — pow(2,10) stays plain."""
+    depth = 0
+    for ch in expression:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth = max(0, depth - 1)
+        elif ch == "," and depth == 0:
+            return True
+    return False
+
+
+def _format_result(value: float, group: bool = False) -> str:
     if isinstance(value, float) and value.is_integer():
-        return str(int(value))
+        value = int(value)
+    # follow the user's style: comma input -> grouped output (1,252,432)
+    if group and isinstance(value, int):
+        return f"{value:,}"
     return str(value)
 
 
@@ -160,6 +178,7 @@ def calculate(expression: str) -> str:
 
     Raises CalculatorError with a user-friendly message on any problem.
     """
+    group = _uses_commas(expression)
     expression = _normalize(expression)
     if not expression:
         raise CalculatorError("empty expression")
@@ -180,4 +199,4 @@ def calculate(expression: str) -> str:
     except TypeError as exc:
         raise CalculatorError(f"wrong arguments: {exc}")
 
-    return _format_result(result)
+    return _format_result(result, group=group)

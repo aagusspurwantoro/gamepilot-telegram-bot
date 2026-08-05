@@ -60,22 +60,23 @@ class TestDecimalComma:
 
 
 class TestThousandsSeparators:
+    # comma input -> grouped output (see TestOutputFollowsInputStyle)
     def test_single_group(self):
-        assert calculate("100,000+5") == "100005"
+        assert calculate("100,000+5") == "100,005"
 
     def test_multiple_groups(self):
-        assert calculate("1,000,000") == "1000000"
+        assert calculate("1,000,000") == "1,000,000"
 
     def test_bdo_scale_numbers(self):
         # 5 billion written the way players type it
-        assert calculate("5,000,000,000") == "5000000000"
+        assert calculate("5,000,000,000") == "5,000,000,000"
 
     def test_three_digits_after_comma_reads_as_thousands(self):
         # documented ambiguity: exactly-3-digit groups win over decimal
-        assert calculate("1,000") == "1000"
+        assert calculate("1,000") == "1,000"
 
     def test_thousands_in_expression(self):
-        assert calculate("1,000,000/2") == "500000"
+        assert calculate("1,000,000/2") == "500,000"
 
     def test_short_group_stays_decimal(self):
         assert calculate("2,55") == "2.55"
@@ -83,6 +84,28 @@ class TestThousandsSeparators:
     def test_four_digit_group_stays_decimal(self):
         # 1,0000 is not a valid thousands group -> decimal comma -> 1.0000
         assert calculate("1,0000") == "1"
+
+
+class TestOutputFollowsInputStyle:
+    def test_comma_input_groups_result(self):
+        assert calculate("1,000,000+252,432") == "1,252,432"
+
+    def test_multiplication_grouped(self):
+        assert calculate("252,432*2") == "504,864"
+
+    def test_no_comma_input_stays_plain(self):
+        assert calculate("1000000+252432") == "1252432"
+
+    def test_decimal_comma_input_also_groups(self):
+        assert calculate("2,5*1000") == "2,500"
+
+    def test_paren_comma_does_not_group(self):
+        # the comma in pow(2,10) is an argument separator, not number style
+        assert calculate("pow(2,10)") == "1024"
+
+    def test_non_integer_result_ungrouped(self):
+        # grouping applies to whole numbers; decimals print as-is
+        assert calculate("1,000,000/3").startswith("333333.333")
 
 
 class TestErrors:

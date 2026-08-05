@@ -44,6 +44,15 @@ otherwise → decimal point.
 Documented ambiguity: `1,000` has a three-digit group, so it reads as
 one thousand — three-digit groups always win over the decimal reading.
 
+### Output follows the input style
+
+If the expression contains a comma outside parentheses (thousands or
+decimal), whole-number results are grouped the same way:
+`1,000,000+252,432` → `1,252,432`. Without commas the result stays
+plain: `1000000+252432` → `1252432`. A comma inside parentheses is an
+argument separator and does not trigger grouping (`pow(2,10)` → `1024`).
+Non-integer results print as-is (`1,000,000/3` → `333333.3333…`).
+
 ## How it works (`calculator.py`)
 
 The evaluator **never uses `eval()`**. The expression is parsed with
