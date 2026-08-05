@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import os
+from pathlib import Path
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ChatType
@@ -16,7 +17,11 @@ from calculator import CalculatorError, calculate
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
+# Resolve data files relative to this file, so the bot works no matter
+# which directory it is started from.
+BASE_DIR = Path(__file__).resolve().parent
+
+load_dotenv(BASE_DIR / ".env")
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -74,7 +79,7 @@ async def handle_bdotax(message: Message, command: CommandObject) -> None:
 
 
 def _load_json(filename: str) -> dict:
-    with open(filename, encoding="utf-8") as f:
+    with open(BASE_DIR / filename, encoding="utf-8") as f:
         return json.load(f)
 
 
