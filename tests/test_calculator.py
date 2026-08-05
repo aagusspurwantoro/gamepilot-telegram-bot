@@ -59,6 +59,32 @@ class TestDecimalComma:
             calculate("(2,5)")
 
 
+class TestThousandsSeparators:
+    def test_single_group(self):
+        assert calculate("100,000+5") == "100005"
+
+    def test_multiple_groups(self):
+        assert calculate("1,000,000") == "1000000"
+
+    def test_bdo_scale_numbers(self):
+        # 5 billion written the way players type it
+        assert calculate("5,000,000,000") == "5000000000"
+
+    def test_three_digits_after_comma_reads_as_thousands(self):
+        # documented ambiguity: exactly-3-digit groups win over decimal
+        assert calculate("1,000") == "1000"
+
+    def test_thousands_in_expression(self):
+        assert calculate("1,000,000/2") == "500000"
+
+    def test_short_group_stays_decimal(self):
+        assert calculate("2,55") == "2.55"
+
+    def test_four_digit_group_stays_decimal(self):
+        # 1,0000 is not a valid thousands group -> decimal comma -> 1.0000
+        assert calculate("1,0000") == "1"
+
+
 class TestErrors:
     def test_empty(self):
         with pytest.raises(CalculatorError, match="empty"):

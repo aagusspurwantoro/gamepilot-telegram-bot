@@ -26,17 +26,23 @@ everything else keeps its decimals.
 
 ## Comma semantics
 
-Deliberately different from `/bdotax`, matching each community's
-convention:
+The calculator auto-detects what a comma means, so BDO-scale numbers
+typed naturally just work:
 
-- **Outside parentheses** a comma is a decimal separator:
-  `2,5*4` → `10` (= 2.5 × 4).
-- **Inside parentheses** it separates function arguments:
+- **Thousands grouping** — comma groups of exactly three digits are
+  thousands separators and are stripped:
+  `1,000,000` → 1000000, `5,000,000,000` → 5000000000.
+- **Decimal comma** — any other comma outside parentheses is a decimal
+  separator: `2,5*4` → `10`, `1,5+1` → `2.5`, `2,55` → 2.55.
+- **Inside parentheses** commas always separate function arguments:
   `pow(2,10)`, `round(3.14159, 2)`.
 
-`_normalize()` tracks parenthesis depth to decide which is which —
-this is why `pow(2,10)` works instead of becoming a broken
-one-argument call.
+`_normalize()` collects each run of digits+commas outside parentheses
+and applies one rule per run: full three-digit grouping → strip commas,
+otherwise → decimal point.
+
+Documented ambiguity: `1,000` has a three-digit group, so it reads as
+one thousand — three-digit groups always win over the decimal reading.
 
 ## How it works (`calculator.py`)
 

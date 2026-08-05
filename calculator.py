@@ -8,12 +8,15 @@ Supported:
   Functions:  sqrt abs round floor ceil sin cos tan log ln exp pow
   Constants:  pi  e
 
-Commas: outside parentheses a comma is a decimal separator (2,5 -> 2.5);
-inside parentheses it separates function arguments (pow(2,10), round(3.14159, 2)).
+Commas: a comma-grouped number like 1,000,000 is read as thousands
+separators; any other comma outside parentheses is a decimal separator
+(2,5 -> 2.5). Inside parentheses commas separate function arguments
+(pow(2,10), round(3.14159, 2)).
 """
 
 import ast
 import math
+import re
 
 _FUNCTIONS = {
     "sqrt": math.sqrt,
@@ -107,25 +110,49 @@ def _format_result(value: float) -> str:
     return str(value)
 
 
+_THOUSANDS_RE = re.compile(r"\d{1,3}(?:,\d{3})+")
+
+
 def _normalize(expression: str) -> str:
     """Prepare an expression for parsing.
 
-    '^' becomes '**'. A comma outside parentheses is a decimal separator
-    and becomes a dot; a comma inside parentheses is a function-argument
-    separator and is left alone, so pow(2,10) and round(3.14159, 2) work.
+    '^' becomes '**'. Inside parentheses commas are function-argument
+    separators and are left alone. Outside parentheses, a number with
+    comma groups of exactly three digits (1,000,000) is thousands
+    separators and they are stripped; any other comma is a decimal
+    separator and becomes a dot (2,5 -> 2.5).
     """
     expression = expression.strip().replace("^", "**")
-    chars = []
+    out = []
+    token = []  # current run of digits/commas at depth 0
     depth = 0
+
+    def flush() -> None:
+        if not token:
+            return
+        text = "".join(token)
+        token.clear()
+        if _THOUSANDS_RE.fullmatch(text):
+            out.append(text.replace(",", ""))
+        else:
+            out.append(text.replace(",", "."))
+
     for ch in expression:
         if ch == "(":
+            flush()
             depth += 1
+            out.append(ch)
         elif ch == ")":
+            flush()
             depth = max(0, depth - 1)
-        elif ch == "," and depth == 0:
-            ch = "."
-        chars.append(ch)
-    return "".join(chars)
+            out.append(ch)
+        elif depth == 0 and ch in "0123456789,":
+            token.append(ch)
+        else:
+            flush()
+            out.append(ch)
+    flush()
+    return "".join(out)
 
 
 def calculate(expression: str) -> str:

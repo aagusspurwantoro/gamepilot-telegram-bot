@@ -26,7 +26,7 @@ Get a bot token from [@BotFather](https://t.me/BotFather) on Telegram. The bot r
 
 Notes:
 - The calculator only answers in **private chats** — in groups it responds to commands only, never to regular chatter.
-- Comma semantics differ by command, matching each community's convention: the calculator reads `2,5` as a decimal comma (= 2.5; inside parentheses commas separate function arguments, e.g. `pow(2,10)`), while `/bdotax`, `/hourly`, and `/progress` read `1,000,000` as thousands separators.
+- Comma semantics differ by command, matching each community's convention: the calculator auto-detects — `1,000,000` is thousands separators, `2,5` is a decimal comma (= 2.5; inside parentheses commas separate function arguments, e.g. `pow(2,10)`), while `/bdotax`, `/hourly`, and `/progress` always read commas as thousands separators.
 
 ## Tests
 
