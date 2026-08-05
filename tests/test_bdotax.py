@@ -31,6 +31,12 @@ class TestParsePrice:
         with pytest.raises(BdoTaxError, match="too large"):
             parse_price("9999t")
 
+    def test_nan_rejected(self):
+        # NaN comparisons are always False, so it slips past the
+        # <= 0 and > 1e15 guards unless checked explicitly
+        with pytest.raises(BdoTaxError, match="not a valid price"):
+            parse_price("nan")
+
 
 class TestParseFlags:
     def test_defaults_all_off(self):
@@ -49,6 +55,9 @@ class TestParseFlags:
     def test_unknown_flag(self):
         with pytest.raises(BdoTaxError, match="unknown option"):
             parse_flags(["xyz"])
+
+    def test_last_fame_flag_wins(self):
+        assert parse_flags(["fame1", "fame3"])["fame"] == 3
 
 
 class TestBreakdown:

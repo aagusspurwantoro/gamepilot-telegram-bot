@@ -12,6 +12,8 @@ Bonuses stack multiplicatively off the 65% profit, matching the
 community-standard model used by veliainn.com and bdolytics.com.
 """
 
+import math
+
 BASE_RATE = 0.65
 VP_BONUS = 0.30
 RING_BONUS = 0.05
@@ -49,6 +51,8 @@ def parse_price(text: str) -> int:
     except ValueError:
         raise BdoTaxError(f"'{text}' is not a valid price")
 
+    if math.isnan(price):
+        raise BdoTaxError(f"'{text}' is not a valid price")
     if price <= 0:
         raise BdoTaxError("price must be greater than zero")
     if price > 1e15:
@@ -100,8 +104,8 @@ def _fmt(value: float) -> str:
 def format_breakdown(result: dict) -> str:
     lines = [
         f"Sale price: {_fmt(result['price'])}",
-        f"Tax (35%): -{_fmt(result['tax'])}",
-        f"Base profit (65%): {_fmt(result['profit'])}",
+        f"Tax ({1 - BASE_RATE:.0%}): -{_fmt(result['tax'])}",
+        f"Base profit ({BASE_RATE:.0%}): {_fmt(result['profit'])}",
     ]
     if result["vp_bonus"]:
         lines.append(f"Value Pack (+30%): +{_fmt(result['vp_bonus'])}")
