@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 from bdotax import BdoTaxError
 from bdotax import run as bdotax_run
 from calculator import CalculatorError, calculate
+from hourly import HourlyError
+from hourly import run as hourly_run
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,6 +38,8 @@ HELP_TEXT = (
     "  Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n\n"
     "/bdotax <price> [vp] [ring] [fame1|fame2|fame3]\n"
     "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
+    "/hourly <total> <per-hour>\n"
+    "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
     "/templates — copy-paste login/logout/progress templates\n"
     "/combo — class combos (witch, witch-macro)\n"
     "/schedule — pilot schedule link\n"
@@ -49,6 +53,7 @@ HELP_TEXT = (
 BOT_COMMANDS = [
     BotCommand(command="help", description="Command overview"),
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
+    BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
     BotCommand(command="templates", description="Copy-paste login/logout/progress templates"),
     BotCommand(command="combo", description="Class combos (witch, witch-macro)"),
     BotCommand(command="schedule", description="Pilot schedule link"),
@@ -73,6 +78,16 @@ async def handle_bdotax(message: Message, command: CommandObject) -> None:
     try:
         reply = bdotax_run(command.args or "")
     except BdoTaxError as exc:
+        await message.answer(f"Error: {exc}")
+        return
+    await message.answer(reply)
+
+
+@dp.message(Command("hourly"))
+async def handle_hourly(message: Message, command: CommandObject) -> None:
+    try:
+        reply = hourly_run(command.args or "")
+    except HourlyError as exc:
         await message.answer(f"Error: {exc}")
         return
     await message.answer(reply)
