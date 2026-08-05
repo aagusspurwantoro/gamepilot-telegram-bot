@@ -1,5 +1,5 @@
 {
   "type-job": "Type Job list:\n• LAIN2\n• IT\n• MT\n• TR",
-  "info": "Status:\n• Used — unit sedang dipakai owner\n• Kosong — unit kosong / available",
+  "info": "Status:\n• Used — unit currently used by owner\n• Empty — unit empty / available",
   "idle": "Idle hours (no order):\nUse No Order = 1410 + PC number\nPCs available: 1-10 -> 14101-14110\n\nExample: PC 5 -> 14105"
 }
