@@ -64,6 +64,14 @@ pyproject.toml  — project metadata + pytest config
 tests/          — pytest suite for calculator and bdotax
 ```
 
+## Documentation
+
+How each feature works, in detail:
+
+- [docs/bdotax.md](docs/bdotax.md) — tax mechanics (verified against official sources), flags, fame tiers
+- [docs/calculator.md](docs/calculator.md) — supported syntax, comma semantics, safety limits
+- [docs/hourly.md](docs/hourly.md) — usage, output format, rounding rules
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
