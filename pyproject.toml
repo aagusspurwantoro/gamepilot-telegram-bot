@@ -1,12 +1,12 @@
 [project]
 name = "gamepilot-telegram-bot"
 version = "1.0.0"
-description = "Telegram bot: calculator, BDO market tax calculator, and pilot workflow helpers"
+description = "Telegram bot: math calculator, BDO market tax, trash loot hours, and silver progress"
 license = {text = "MIT"}
 requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
-# Put the repo root on sys.path so tests can import calculator/bdotax
+# Put the repo root on sys.path so tests can import the logic modules
 # no matter how pytest is invoked (bare `pytest`, CI, IDE runners).
 pythonpath = ["."]
 testpaths = ["tests"]
