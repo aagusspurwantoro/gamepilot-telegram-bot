@@ -94,8 +94,20 @@ async def handle_info(message: Message) -> None:
 
 
 @dp.message(Command("idle"))
-async def handle_idle(message: Message) -> None:
-    await message.answer(_load_json("info.json")["idle"])
+async def handle_idle(message: Message, command: CommandObject) -> None:
+    args = (command.args or "").strip().lower().removeprefix("pc").strip()
+    if not args:
+        await message.answer(_load_json("info.json")["idle"])
+        return
+    try:
+        pc = int(args)
+    except ValueError:
+        await message.answer("Error: give me a PC number, e.g. /idle 5")
+        return
+    if not 1 <= pc <= 10:
+        await message.answer("Error: PC number must be 1-10, e.g. /idle 5")
+        return
+    await message.answer(str(14100 + pc))
 
 
 @dp.message(Command("schedule"))
