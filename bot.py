@@ -40,7 +40,8 @@ HELP_TEXT = (
     "/hourly <total> <per-hour>\n"
     "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
     "/progress <current>/<goal> <added>\n"
-    "  silver grinding progress, e.g. /progress 463/500 5.1"
+    "  silver grinding progress, e.g. /progress 463/500 5.1\n\n"
+    "/docs <name> — feature documentation, e.g. /docs bdotax"
 )
 
 # Shown in Telegram's command menu. Names must be a-z/0-9/underscore.
@@ -49,6 +50,7 @@ BOT_COMMANDS = [
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
     BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
     BotCommand(command="progress", description="Silver grinding progress (e.g. /progress 463/500 5.1)"),
+    BotCommand(command="docs", description="Feature documentation (e.g. /docs bdotax)"),
 ]
 
 
@@ -90,6 +92,43 @@ async def handle_progress(message: Message, command: CommandObject) -> None:
         await message.answer(f"Error: {exc}")
         return
     await message.answer(reply)
+
+
+DOCS_DIR = BASE_DIR / "docs"
+# Telegram messages are capped at 4096 characters; leave headroom.
+_MAX_MESSAGE = 4000
+
+
+def _available_docs() -> list[str]:
+    return sorted(p.stem for p in DOCS_DIR.glob("*.md"))
+
+
+@dp.message(Command("docs"))
+async def handle_docs(message: Message, command: CommandObject) -> None:
+    docs = _available_docs()
+    name = (command.args or "").strip().lower()
+    if not name:
+        await message.answer(
+            "Available docs:\n" + "\n".join(f"  /docs {n}" for n in docs)
+        )
+        return
+    if name not in docs:
+        await message.answer(
+            f"No docs called '{name}' — available: {', '.join(docs)}"
+        )
+        return
+    text = (DOCS_DIR / f"{name}.md").read_text(encoding="utf-8")
+    # split long docs into multiple messages on line boundaries
+    chunk: list[str] = []
+    length = 0
+    for line in text.splitlines(keepends=True):
+        if length + len(line) > _MAX_MESSAGE and chunk:
+            await message.answer("".join(chunk))
+            chunk, length = [], 0
+        chunk.append(line)
+        length += len(line)
+    if chunk:
+        await message.answer("".join(chunk))
 
 
 @dp.message(F.chat.type == ChatType.PRIVATE)
