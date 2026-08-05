@@ -1,5 +1,0 @@
-{
-  "login": "Login\nName: [name]\nDivision: [division]\nAttendance No: [attendance no]\nNo Order: [no order]",
-  "logout": "Logout\nNo Login: [no login]\nNo Order: [no order]\nName: [name]\nDivision: [division]\nAttendance No: [attendance no]\nType Job: [type job]\nUsed",
-  "progress": "Progress\nNo Login: [no login]\nNo Order: [no order]\nName: [name]\nDivision: [division]\nAttendance No: [attendance no]\nType Job: [type job]\nProgress: [progress]"
-}

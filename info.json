@@ -1,5 +1,0 @@
-{
-  "type-job": "Type Job list:\n• LAIN2 Kosong\n• LAIN2 Used\n• LAIN2 IT\n• LAIN2 MT\n• LAIN2 TR",
-  "info": "Status:\n• Kosong — no orders; the pilot is free to rest, take duty shifts, or do other tasks\n• Used — the game account is in use by its owner, so orders cannot be worked on\n• IT — office maintenance, e.g. power outage or internet problems\n• MT — game maintenance\n• TR — the pilot is training a new pilot",
-  "idle": "usage: /idle <pc>\nexamples: /idle 5 -> 14105  ·  /idle 10 -> 14110\nPCs available: 1-10"
-}
