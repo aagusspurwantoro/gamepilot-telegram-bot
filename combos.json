@@ -1,4 +1,4 @@
 {
-  "witch": "Witch\n\nSHIFT KIRI\nSHIFT KANAN\nSHIFT F\nSHIFT Q\nS F\nW F\nS KANAN\nW KANAN",
-  "witch-macro": "Witch (Macro)\n\nMacro Atas\nMacro Bawah\nZ"
+  "witch": "Witch\n\nSHIFT LMB\nSHIFT RMB\nSHIFT F\nSHIFT Q\nS F\nW F\nS RMB\nW RMB",
+  "witch-macro": "Witch (Macro)\n\nMacro Up\nMacro Down\nZ"
 }
