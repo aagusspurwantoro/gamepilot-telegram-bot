@@ -1,4 +1,4 @@
-# GamePilot Telegram Bot
+# Game Pilot Bot
 
 A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — calculator, Black Desert Online market tax calculator, and copy-paste helpers for pilot workflows.
 

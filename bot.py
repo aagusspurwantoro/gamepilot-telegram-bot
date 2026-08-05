@@ -30,7 +30,7 @@ SCHEDULE_URL = "https://docs.google.com/spreadsheets/d/1m4p1gzCgbTrQUMn81e2YGEZ3
 dp = Dispatcher()
 
 HELP_TEXT = (
-    "GamePilot commands:\n\n"
+    "Game Pilot Bot commands:\n\n"
     "Calculator — send any math expression:\n"
     "  2+2*5 · (10-4)/3 · sqrt(16) + 3^2 · 2*pi*5\n"
     "  Functions: sqrt abs round floor ceil sin cos tan log ln exp pow\n\n"
@@ -60,7 +60,7 @@ BOT_COMMANDS = [
 
 @dp.message(CommandStart())
 async def handle_start(message: Message) -> None:
-    await message.answer("Hello! I'm GamePilot bot.\n\n" + HELP_TEXT)
+    await message.answer("Hello! I'm Game Pilot Bot.\n\n" + HELP_TEXT)
 
 
 @dp.message(Command("help"))
