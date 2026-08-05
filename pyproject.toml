@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# Put the repo root on sys.path so tests can import calculator/bdotax
+# no matter how pytest is invoked (bare `pytest`, CI, IDE runners).
+pythonpath = ["."]
+testpaths = ["tests"]
