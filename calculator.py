@@ -91,7 +91,12 @@ def _evaluate(node: ast.AST) -> float:
         if func is None:
             raise CalculatorError(f"unknown function: {node.func.id}")
         args = [_evaluate(arg) for arg in node.args]
-        return func(*args)
+        # pow() must respect the same limits as the ** operator: builtin
+        # pow computes exact big integers, so pow(10, 10**8) would hang
+        # the event loop for minutes without an exponent cap.
+        if func is pow and len(args) == 2 and abs(args[1]) > _MAX_EXPONENT:
+            raise CalculatorError("exponent is too large")
+        return _check(func(*args))
 
     raise CalculatorError("unsupported expression")
 

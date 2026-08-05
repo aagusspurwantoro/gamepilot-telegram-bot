@@ -72,6 +72,17 @@ class TestErrors:
         with pytest.raises(CalculatorError, match="exponent"):
             calculate("9**9**9")
 
+    def test_pow_function_exponent_too_large(self):
+        # regression: the exponent cap only guarded the ** operator, so
+        # pow(10, 10**8) computed a 100M-digit integer and hung the bot
+        with pytest.raises(CalculatorError, match="exponent"):
+            calculate("pow(10,100000000)")
+
+    def test_function_result_capped(self):
+        # function returns go through the same magnitude check as operators
+        with pytest.raises(CalculatorError, match="too large"):
+            calculate("exp(700)")
+
     def test_number_too_large(self):
         with pytest.raises(CalculatorError, match="too large"):
             calculate("10**100")
