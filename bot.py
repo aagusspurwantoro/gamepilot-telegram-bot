@@ -28,8 +28,6 @@ load_dotenv(BASE_DIR / ".env")
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-REPO_URL = "https://github.com/aagusspurwantoro/gamepilot-telegram-bot"
-
 dp = Dispatcher()
 
 HELP_TEXT = (
@@ -56,12 +54,7 @@ BOT_COMMANDS = [
 
 @dp.message(CommandStart())
 async def handle_start(message: Message) -> None:
-    await message.answer(
-        "Hello! I'm Game Pilot Bot.\n\n"
-        + HELP_TEXT
-        + "\n\nOpen source — advice, code changes, and suggestions welcome:\n"
-        + REPO_URL
-    )
+    await message.answer("Hello! I'm Game Pilot Bot.\n\n" + HELP_TEXT)
 
 
 @dp.message(Command("help"))
@@ -122,7 +115,7 @@ async def handle_error(event: ErrorEvent) -> None:
 
 
 async def main() -> None:
-    if not BOT_TOKEN or BOT_TOKEN == "your-bot-token-here":
+    if not BOT_TOKEN:
         raise RuntimeError(
             "BOT_TOKEN is not set. Get a token from @BotFather on Telegram "
             "and put it in the .env file."
