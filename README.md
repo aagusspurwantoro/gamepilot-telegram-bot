@@ -10,6 +10,7 @@ A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — a safe math
 | `/bdotax <price> [vp] [ring] [fame1\|fame2\|fame3\|<points>]` | BDO central market tax breakdown (65% base, 84.5% with Value Pack, +5% ring/pass, family fame tiers). Fame accepts presets or raw points (e.g. `4500` -> +1.0%). Supports price shortcuts: `500k`, `100m`, `1.5b` |
 | `/hourly <total> <per-hour>` | Hours from trash loot — `/hourly 55k 15k` -> `3.67 hours (3h 40m)` |
 | `/agris <total> <per-hour> <points> <points-per-item>` | Hours with Agris Fever — `/agris 30k 15k 10k 1.33` -> `1.5 hours (1h 30m)` |
+| `/agriscost <total> <per-hour> <hours> <points>` | Find your Agris points-per-item ratio from a timed grind — `/agriscost 40k 25k 1 12k` -> `0.8 pts/item` |
 | `/progress <current>/<goal> <added>` | Silver grinding progress — `/progress 463/500 5.1` -> `468.1 B / 500 B (93.6%)` |
 | `/help` | Command overview |
 
@@ -23,7 +24,7 @@ cp .env.example .env   # then put your bot token in .env
 python bot.py
 ```
 
-Get a bot token from [@BotFather](https://t.me/BotFather) on Telegram. The bot registers its command menu (`/bdotax`, `/hourly`, `/agris`, `/progress`) automatically on startup.
+Get a bot token from [@BotFather](https://t.me/BotFather) on Telegram. The bot registers its command menu (`/bdotax`, `/hourly`, `/agris`, `/agriscost`, `/progress`) automatically on startup.
 
 Notes:
 - The calculator only answers in **private chats** — in groups it responds to commands only, never to regular chatter.

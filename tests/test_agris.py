@@ -1,6 +1,6 @@
 import pytest
 
-from agris import AgrisError, parse_cost, run
+from agris import AgrisError, cost_run, parse_cost, parse_hours, run
 
 
 class TestParseCost:
@@ -82,3 +82,74 @@ class TestRun:
     def test_zero_cost_rejected(self):
         with pytest.raises(AgrisError, match="greater than zero"):
             run("30k 15k 10k 0")
+
+
+class TestParseHours:
+    def test_integer_and_decimal(self):
+        assert parse_hours("1") == 1.0
+        assert parse_hours("1.5") == 1.5
+
+    def test_invalid(self):
+        with pytest.raises(AgrisError, match="not a valid"):
+            parse_hours("abc")
+
+    def test_nan_and_infinity_rejected(self):
+        for text in ("nan", "inf"):
+            with pytest.raises(AgrisError, match="not a valid"):
+                parse_hours(text)
+
+    def test_not_positive(self):
+        with pytest.raises(AgrisError, match="greater than zero"):
+            parse_hours("0")
+
+
+class TestCostRun:
+    def test_full_breakdown(self):
+        # the calibration example: 1h grind, 40k total, 25k/h normal,
+        # 12k points -> 15k extra items -> 0.8 pts/item
+        reply = cost_run("40k 25k 1 12k")
+        assert "Total: 40,000 TL" in reply
+        assert "Rate: 25,000 TL/hour x 1 hour = 25,000 TL" in reply
+        assert "Extra from Agris: +15,000 TL" in reply
+        assert "Points: 12,000" in reply
+        assert "= 0.8 pts/item" in reply
+        assert "/agris <total> 25,000 <points> 0.8" in reply
+
+    def test_fractional_hours(self):
+        # 55k total, 1.5h at 25k = 37.5k normal, 17.5k extra
+        # 20k points / 17.5k = 1.1428... -> 1.14
+        reply = cost_run("55k 25k 1.5 20k")
+        assert "x 1.5 hours = 37,500 TL" in reply
+        assert "Extra from Agris: +17,500 TL" in reply
+        assert "= 1.14 pts/item" in reply
+
+    def test_exact_ratio_no_decimals(self):
+        # extra = 20k, points = 40k -> exactly 2
+        reply = cost_run("45k 25k 1 40k")
+        assert "= 2 pts/item" in reply
+
+    def test_no_extra_loot_rejected(self):
+        # total == rate x hours -> Agris added nothing
+        with pytest.raises(AgrisError, match="no extra loot"):
+            cost_run("25k 25k 1 12k")
+
+    def test_negative_extra_rejected(self):
+        with pytest.raises(AgrisError, match="no extra loot"):
+            cost_run("20k 25k 1 12k")
+
+    def test_wrong_arg_count_shows_usage(self):
+        for args in ("", "40k 25k 1", "40k 25k 1 12k 5"):
+            with pytest.raises(AgrisError, match="usage"):
+                cost_run(args)
+
+    def test_garbage_inputs(self):
+        with pytest.raises(AgrisError, match="not a valid amount"):
+            cost_run("abc 25k 1 12k")
+        with pytest.raises(AgrisError, match="not a valid"):
+            cost_run("40k 25k abc 12k")
+        with pytest.raises(AgrisError, match="not a valid amount"):
+            cost_run("40k 25k 1 abc")
+
+    def test_zero_hours_rejected(self):
+        with pytest.raises(AgrisError, match="greater than zero"):
+            cost_run("40k 25k 0 12k")

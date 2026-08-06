@@ -10,6 +10,7 @@ from aiogram.types import BotCommand, ErrorEvent, Message
 from dotenv import load_dotenv
 
 from agris import AgrisError
+from agris import cost_run as agriscost_run
 from agris import run as agris_run
 from bdotax import BdoTaxError
 from bdotax import run as bdotax_run
@@ -42,7 +43,9 @@ HELP_TEXT = (
     "/hourly <total> <per-hour>\n"
     "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
     "/agris <total> <per-hour> <points> <points-per-item>\n"
-    "  hours with Agris Fever, e.g. /agris 30k 15k 10k 1.33\n\n"
+    "  hours with Agris Fever, e.g. /agris 30k 15k 10k 1.33\n"
+    "/agriscost <total> <per-hour> <hours> <points>\n"
+    "  find your points-per-item, e.g. /agriscost 40k 25k 1 12k\n\n"
     "/progress <current>/<goal> <added>\n"
     "  silver grinding progress, e.g. /progress 463/500 5.1"
 )
@@ -53,6 +56,7 @@ BOT_COMMANDS = [
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
     BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
     BotCommand(command="agris", description="Hours with Agris Fever (e.g. /agris 30k 15k 10k 1.33)"),
+    BotCommand(command="agriscost", description="Find points-per-item (e.g. /agriscost 40k 25k 1 12k)"),
     BotCommand(command="progress", description="Silver grinding progress (e.g. /progress 463/500 5.1)"),
 ]
 
@@ -91,6 +95,16 @@ async def handle_hourly(message: Message, command: CommandObject) -> None:
 async def handle_agris(message: Message, command: CommandObject) -> None:
     try:
         reply = agris_run(command.args or "")
+    except AgrisError as exc:
+        await message.answer(f"Error: {exc}")
+        return
+    await message.answer(reply)
+
+
+@dp.message(Command("agriscost"))
+async def handle_agriscost(message: Message, command: CommandObject) -> None:
+    try:
+        reply = agriscost_run(command.args or "")
     except AgrisError as exc:
         await message.answer(f"Error: {exc}")
         return

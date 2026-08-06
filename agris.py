@@ -39,25 +39,34 @@ def _tl(text: str) -> int:
         raise AgrisError(str(exc))
 
 
-def parse_cost(text: str) -> float:
-    """Parse the points-per-extra-item ratio (e.g. 1.33, 2)."""
+def _parse_positive_float(text: str, label: str) -> float:
     cleaned = text.strip().lower()
     try:
-        cost = float(cleaned)
+        value = float(cleaned)
     except ValueError:
-        raise AgrisError(f"'{text}' is not a valid points-per-item value")
-    if not math.isfinite(cost):
-        raise AgrisError(f"'{text}' is not a valid points-per-item value")
-    if cost <= 0:
-        raise AgrisError("points per item must be greater than zero")
-    if cost > 1e6:
-        raise AgrisError("points per item is too large")
-    return cost
+        raise AgrisError(f"'{text}' is not a valid {label}")
+    if not math.isfinite(value):
+        raise AgrisError(f"'{text}' is not a valid {label}")
+    if value <= 0:
+        raise AgrisError(f"{label} must be greater than zero")
+    if value > 1e6:
+        raise AgrisError(f"{label} is too large")
+    return value
 
 
-def _fmt_cost(cost: float) -> str:
-    """1.33 -> '1.33', 2.0 -> '2'."""
-    return f"{cost:g}"
+def parse_cost(text: str) -> float:
+    """Parse the points-per-extra-item ratio (e.g. 1.33, 2)."""
+    return _parse_positive_float(text, "points-per-item value")
+
+
+def parse_hours(text: str) -> float:
+    """Parse a duration in hours (e.g. 1, 1.5)."""
+    return _parse_positive_float(text, "hours value")
+
+
+def _fmt(value: float) -> str:
+    """0.8 -> '0.8', 2.0 -> '2', 1.1428... -> '1.14'."""
+    return f"{value:.2f}".rstrip("0").rstrip(".")
 
 
 def run(arguments: str) -> str:
@@ -88,7 +97,50 @@ def run(arguments: str) -> str:
     return (
         f"Total: {total:,} TL\n"
         f"Rate: {rate:,} TL/hour\n"
-        f"Agris: {points:,} pts at {_fmt_cost(cost)} pts/item = +{round(extra):,} TL\n"
+        f"Agris: {points:,} pts at {_fmt(cost)} pts/item = +{round(extra):,} TL\n"
         f"\n"
         f"= {_hours_text(hours)}"
+    )
+
+
+def cost_run(arguments: str) -> str:
+    """Handle the /agriscost argument string and return the reply text.
+
+    Works out the points-per-item ratio from a timed calibration grind:
+    the Agris extra loot is total minus (normal rate x hours), and the
+    ratio is points consumed divided by that extra.
+
+    Usage: /agriscost <total> <per-hour> <hours> <points>
+    """
+    tokens = arguments.split()
+    if len(tokens) != 4:
+        raise AgrisError(
+            "usage: /agriscost <total> <per-hour> <hours> <points>\n"
+            "examples: /agriscost 40k 25k 1 12k  ·  /agriscost 55k 25k 1.5 20k"
+        )
+
+    total = _tl(tokens[0])
+    rate = _tl(tokens[1])
+    hours = parse_hours(tokens[2])
+    points = _tl(tokens[3])
+
+    normal = rate * hours
+    extra = total - normal
+    if extra <= 0:
+        raise AgrisError(
+            f"no extra loot here — total must be more than rate x hours "
+            f"({normal:,.0f} TL), otherwise Agris added nothing"
+        )
+    cost = points / extra
+
+    unit = "hour" if _fmt(hours) == "1" else "hours"
+    return (
+        f"Total: {total:,} TL\n"
+        f"Rate: {rate:,} TL/hour x {_fmt(hours)} {unit} = {normal:,.0f} TL\n"
+        f"Extra from Agris: +{extra:,.0f} TL\n"
+        f"Points: {points:,}\n"
+        f"\n"
+        f"= {_fmt(cost)} pts/item\n"
+        f"\n"
+        f"Use it: /agris <total> {rate:,} <points> {_fmt(cost)}"
     )

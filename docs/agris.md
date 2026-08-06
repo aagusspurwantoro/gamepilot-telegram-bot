@@ -33,7 +33,6 @@ If the Agris extra loot is larger than the total, the input is
 inconsistent and the bot says so instead of printing negative hours.
 
 ## Mechanics (verified against official sources, Aug 2026)
-
 From the [official PA Wiki — Agris Fever](https://www.naeu.playblackdesert.com/en-us/Wiki?wikiNo=145)
 and [grumpygreen](https://grumpygreen.cricket/margahan-agris/):
 
@@ -54,6 +53,31 @@ your spot: note the trash loot before/after an Agris session and the
 points consumed — e.g. 20,000 points bought 15,000 extra items →
 `20000 / 15000 = 1.33` pts/item. That single number absorbs the spot's
 per-kill cost **and** your buff level (+100% vs +150%) automatically.
+
+### /agriscost — measure the ratio for you
+
+Do **one timed grind** with Agris at your spot, then feed the numbers
+in instead of dividing by hand:
+
+```
+/agriscost <total> <per-hour> <hours> <points>
+
+/agriscost 40k 25k 1 12k
+
+Total: 40,000 TL
+Rate: 25,000 TL/hour x 1 hour = 25,000 TL
+Extra from Agris: +15,000 TL
+Points: 12,000
+
+= 0.8 pts/item
+
+Use it: /agris <total> 25,000 <points> 0.8
+```
+
+The extra loot is `total − (rate × hours)`; the ratio is
+`points ÷ extra`. If the total is not more than `rate × hours`, Agris
+added nothing in that session and the bot says so. Recalibrate when
+you switch spots or finish the Margahan book (+150% buff).
 
 ## How it works (`agris.py`)
 
