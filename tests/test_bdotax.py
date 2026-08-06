@@ -103,7 +103,7 @@ class TestBreakdown:
         result = breakdown(100_000_000, vp=True)
         assert result["rate"] == pytest.approx(0.845)
 
-    def test_all_bonuses_stack_multiplicatively(self):
+    def test_all_bonuses_stack_additively(self):
         result = breakdown(100_000_000, vp=True, ring=True, fame=3)
         # 0.65 * (1 + 0.30 + 0.05 + 0.015) = 0.88725
         assert result["rate"] == pytest.approx(0.88725)

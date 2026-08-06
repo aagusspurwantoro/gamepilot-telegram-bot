@@ -1,6 +1,6 @@
 # Game Pilot Bot
 
-A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — a safe math calculator, a Black Desert Online market tax calculator, and a trash loot hours calculator.
+A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — a safe math calculator, a Black Desert Online market tax calculator, a trash loot hours calculator, and a silver grinding progress tracker.
 
 ## Commands
 
@@ -22,7 +22,7 @@ cp .env.example .env   # then put your bot token in .env
 python bot.py
 ```
 
-Get a bot token from [@BotFather](https://t.me/BotFather) on Telegram. The bot registers its command menu (`/bdotax`, `/hourly`) automatically on startup.
+Get a bot token from [@BotFather](https://t.me/BotFather) on Telegram. The bot registers its command menu (`/bdotax`, `/hourly`, `/progress`) automatically on startup.
 
 Notes:
 - The calculator only answers in **private chats** — in groups it responds to commands only, never to regular chatter.
@@ -51,7 +51,7 @@ bdotax.py       — BDO central market tax logic
 hourly.py       — trash loot hours calculator
 progress.py     — silver grinding progress calculator
 pyproject.toml  — project metadata + pytest config
-tests/          — pytest suite for calculator, bdotax, and hourly
+tests/          — pytest suite for calculator, bdotax, hourly, and progress
 ```
 
 ## Documentation
