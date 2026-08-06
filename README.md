@@ -1,8 +1,8 @@
 # Game Pilot Bot
 
+![PyPI Python Version](https://img.shields.io/pypi/pyversions/aiogram)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/aagusspurwantoro/gamepilot-telegram-bot/test.yml)
 ![GitHub License](https://img.shields.io/github/license/aagusspurwantoro/gamepilot-telegram-bot)
-![PyPI Python Version](https://img.shields.io/pypi/pyversions/aiogram)
 
 A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — a safe math calculator, a Black Desert Online market tax calculator, trash loot hours calculators (plain and Agris Fever), and a silver grinding progress tracker.
 
