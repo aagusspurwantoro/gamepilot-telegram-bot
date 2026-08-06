@@ -9,6 +9,8 @@ from aiogram.filters import Command, CommandObject, CommandStart
 from aiogram.types import BotCommand, ErrorEvent, Message
 from dotenv import load_dotenv
 
+from agris import AgrisError
+from agris import run as agris_run
 from bdotax import BdoTaxError
 from bdotax import run as bdotax_run
 from calculator import CalculatorError, calculate
@@ -39,6 +41,8 @@ HELP_TEXT = (
     "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
     "/hourly <total> <per-hour>\n"
     "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
+    "/agris <total> <per-hour> <points> <points-per-item>\n"
+    "  hours with Agris Fever, e.g. /agris 30k 15k 10k 1.33\n\n"
     "/progress <current>/<goal> <added>\n"
     "  silver grinding progress, e.g. /progress 463/500 5.1"
 )
@@ -48,6 +52,7 @@ BOT_COMMANDS = [
     BotCommand(command="help", description="Command overview"),
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
     BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
+    BotCommand(command="agris", description="Hours with Agris Fever (e.g. /agris 30k 15k 10k 1.33)"),
     BotCommand(command="progress", description="Silver grinding progress (e.g. /progress 463/500 5.1)"),
 ]
 
@@ -77,6 +82,16 @@ async def handle_hourly(message: Message, command: CommandObject) -> None:
     try:
         reply = hourly_run(command.args or "")
     except HourlyError as exc:
+        await message.answer(f"Error: {exc}")
+        return
+    await message.answer(reply)
+
+
+@dp.message(Command("agris"))
+async def handle_agris(message: Message, command: CommandObject) -> None:
+    try:
+        reply = agris_run(command.args or "")
+    except AgrisError as exc:
         await message.answer(f"Error: {exc}")
         return
     await message.answer(reply)
