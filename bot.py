@@ -17,6 +17,8 @@ from bdotax import run as bdotax_run
 from calculator import CalculatorError, calculate
 from hourly import HourlyError
 from hourly import run as hourly_run
+from hours import HoursError
+from hours import run as hours_run
 from progress import ProgressError
 from progress import run as progress_run
 
@@ -42,6 +44,8 @@ HELP_TEXT = (
     "  BDO central market tax, e.g. /bdotax 100m vp\n\n"
     "/hourly <total> <per-hour>\n"
     "  hours from trash loot, e.g. /hourly 55k 15k\n\n"
+    "/hours <current>/<goal> <added>\n"
+    "  hours progress, e.g. /hours 25h 40m/50h 5h 14m\n\n"
     "/agris <total> <per-hour> <points> <points-per-item>\n"
     "  hours with Agris Fever, e.g. /agris 30k 15k 10k 1.33\n"
     "/agriscost <total> <per-hour> <hours> <points>\n"
@@ -57,6 +61,9 @@ BOT_COMMANDS = [
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
     BotCommand(
         command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"
+    ),
+    BotCommand(
+        command="hours", description="Hours progress (e.g. /hours 25h 40m/50h 5h 14m)"
     ),
     BotCommand(
         command="agris",
@@ -98,6 +105,16 @@ async def handle_hourly(message: Message, command: CommandObject) -> None:
     try:
         reply = hourly_run(command.args or "")
     except HourlyError as exc:
+        await message.answer(f"Error: {exc}")
+        return
+    await message.answer(reply)
+
+
+@dp.message(Command("hours"))
+async def handle_hours(message: Message, command: CommandObject) -> None:
+    try:
+        reply = hours_run(command.args or "")
+    except HoursError as exc:
         await message.answer(f"Error: {exc}")
         return
     await message.answer(reply)

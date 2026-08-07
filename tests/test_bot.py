@@ -47,7 +47,7 @@ class TestHelp:
         assert _replied(message) == bot.HELP_TEXT
 
     def test_help_lists_every_command(self):
-        for name in ("bdotax", "hourly", "agris", "agriscost", "progress"):
+        for name in ("bdotax", "hourly", "hours", "agris", "agriscost", "progress"):
             assert f"/{name}" in bot.HELP_TEXT
 
     def test_bot_commands_match_help_text(self):
@@ -77,6 +77,16 @@ class TestCommandHandlers:
     def test_hourly_error(self):
         message = _message()
         _run(bot.handle_hourly(message, _command("55k")))
+        assert _replied(message).startswith("Error:")
+
+    def test_hours(self):
+        message = _message()
+        _run(bot.handle_hours(message, _command("25h 40m/50h 5h 14m")))
+        assert "30h 54m / 50h" in _replied(message)
+
+    def test_hours_error(self):
+        message = _message()
+        _run(bot.handle_hours(message, _command("25h")))
         assert _replied(message).startswith("Error:")
 
     def test_agris(self):
