@@ -38,7 +38,7 @@ def parse_amount(text: str) -> float:
     try:
         amount = float(cleaned) / divisor
     except ValueError:
-        raise ProgressError(f"'{text}' is not a valid amount")
+        raise ProgressError(f"'{text}' is not a valid amount") from None
 
     if not math.isfinite(amount):
         raise ProgressError(f"'{text}' is not a valid amount")

@@ -62,7 +62,7 @@ def parse_price(text: str) -> int:
     try:
         price = float(cleaned) * multiplier
     except ValueError:
-        raise BdoTaxError(f"'{text}' is not a valid price")
+        raise BdoTaxError(f"'{text}' is not a valid price") from None
 
     if math.isnan(price):
         raise BdoTaxError(f"'{text}' is not a valid price")
@@ -99,7 +99,10 @@ def parse_flags(tokens: list) -> dict:
 
 
 def breakdown(
-    price: int, vp: bool = False, ring: bool = False, fame: int = 0,
+    price: int,
+    vp: bool = False,
+    ring: bool = False,
+    fame: int = 0,
     fame_points: int | None = None,
 ) -> dict:
     """Compute the full tax breakdown for a sale price."""
@@ -123,7 +126,7 @@ def breakdown(
 
 
 def _fmt(value: float) -> str:
-    return f"{int(round(value)):,}"
+    return f"{round(value):,}"
 
 
 def format_breakdown(result: dict) -> str:
@@ -139,7 +142,8 @@ def format_breakdown(result: dict) -> str:
     if result["fame_bonus"]:
         points = (
             f"{result['fame_points']:,} pts, "
-            if result["fame_points"] is not None else ""
+            if result["fame_points"] is not None
+            else ""
         )
         lines.append(
             f"Family Fame ({points}+{FAME_BONUSES[result['fame']]:.1%}): "

@@ -33,7 +33,7 @@ def parse_amount(text: str) -> int:
     try:
         amount = float(cleaned) * multiplier
     except ValueError:
-        raise HourlyError(f"'{text}' is not a valid amount")
+        raise HourlyError(f"'{text}' is not a valid amount") from None
 
     if not math.isfinite(amount):
         raise HourlyError(f"'{text}' is not a valid amount")
@@ -69,8 +69,5 @@ def run(arguments: str) -> str:
     rate = parse_amount(tokens[1])
 
     return (
-        f"Total: {total:,} TL\n"
-        f"Rate: {rate:,} TL/hour\n"
-        f"\n"
-        f"= {_hours_text(total / rate)}"
+        f"Total: {total:,} TL\nRate: {rate:,} TL/hour\n\n= {_hours_text(total / rate)}"
     )

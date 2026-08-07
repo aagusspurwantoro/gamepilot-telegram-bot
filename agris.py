@@ -22,8 +22,7 @@ Formula:
 
 import math
 
-from hourly import HourlyError
-from hourly import _hours_text
+from hourly import HourlyError, _hours_text
 from hourly import parse_amount as _parse_tl
 
 
@@ -36,7 +35,7 @@ def _tl(text: str) -> int:
     try:
         return _parse_tl(text)
     except HourlyError as exc:
-        raise AgrisError(str(exc))
+        raise AgrisError(str(exc)) from exc
 
 
 def _parse_positive_float(text: str, label: str) -> float:
@@ -44,7 +43,7 @@ def _parse_positive_float(text: str, label: str) -> float:
     try:
         value = float(cleaned)
     except ValueError:
-        raise AgrisError(f"'{text}' is not a valid {label}")
+        raise AgrisError(f"'{text}' is not a valid {label}") from None
     if not math.isfinite(value):
         raise AgrisError(f"'{text}' is not a valid {label}")
     if value <= 0:

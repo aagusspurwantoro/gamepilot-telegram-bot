@@ -45,7 +45,7 @@ _BIN_OPS = {
     ast.Div: lambda a, b: a / b,
     ast.FloorDiv: lambda a, b: a // b,
     ast.Mod: lambda a, b: a % b,
-    ast.Pow: lambda a, b: a ** b,
+    ast.Pow: lambda a, b: a**b,
 }
 
 _UNARY_OPS = {
@@ -186,17 +186,17 @@ def calculate(expression: str) -> str:
     try:
         tree = ast.parse(expression, mode="eval")
     except SyntaxError:
-        raise CalculatorError("I couldn't parse that expression")
+        raise CalculatorError("I couldn't parse that expression") from None
 
     try:
         result = _evaluate(tree)
     except CalculatorError:
         raise
     except ZeroDivisionError:
-        raise CalculatorError("division by zero")
+        raise CalculatorError("division by zero") from None
     except (ValueError, OverflowError):
-        raise CalculatorError("math error (check the input range)")
+        raise CalculatorError("math error (check the input range)") from None
     except TypeError as exc:
-        raise CalculatorError(f"wrong arguments: {exc}")
+        raise CalculatorError(f"wrong arguments: {exc}") from None
 
     return _format_result(result, group=group)

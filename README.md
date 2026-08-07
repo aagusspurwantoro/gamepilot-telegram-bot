@@ -23,7 +23,7 @@ A Telegram bot built with [aiogram 3](https://docs.aiogram.dev/) — a safe math
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -e .        # or: pip install -e .[dev]  for pytest + ruff
 cp .env.example .env   # then put your bot token in .env
 python bot.py
 ```
