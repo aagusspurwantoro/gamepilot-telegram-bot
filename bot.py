@@ -47,17 +47,29 @@ HELP_TEXT = (
     "/agriscost <total> <per-hour> <hours> <points>\n"
     "  find your points-per-item, e.g. /agriscost 40k 25k 1 12k\n\n"
     "/progress <current>/<goal> <added>\n"
-    "  silver grinding progress, e.g. /progress 463/500 5.1"
+    "  silver grinding progress, e.g. /progress 463/500 5.1\n\n"
+    "/help — show this overview"
 )
 
 # Shown in Telegram's command menu. Names must be a-z/0-9/underscore.
 BOT_COMMANDS = [
     BotCommand(command="help", description="Command overview"),
     BotCommand(command="bdotax", description="BDO central market tax calculator"),
-    BotCommand(command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"),
-    BotCommand(command="agris", description="Hours with Agris Fever (e.g. /agris 30k 15k 10k 1.33)"),
-    BotCommand(command="agriscost", description="Find points-per-item (e.g. /agriscost 40k 25k 1 12k)"),
-    BotCommand(command="progress", description="Silver grinding progress (e.g. /progress 463/500 5.1)"),
+    BotCommand(
+        command="hourly", description="Hours from trash loot (e.g. /hourly 55k 15k)"
+    ),
+    BotCommand(
+        command="agris",
+        description="Hours with Agris Fever (e.g. /agris 30k 15k 10k 1.33)",
+    ),
+    BotCommand(
+        command="agriscost",
+        description="Find points-per-item (e.g. /agriscost 40k 25k 1 12k)",
+    ),
+    BotCommand(
+        command="progress",
+        description="Silver grinding progress (e.g. /progress 463/500 5.1)",
+    ),
 ]
 
 
